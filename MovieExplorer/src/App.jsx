@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Home from './pages/Home'
 import { MovieProvider } from './context/MovieContext'
 import Favorites from './pages/Favorites'
+import MovieDetails from './pages/MovieDetails'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -39,7 +40,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/favorites" element={<Favorites />} />
-            
+            <Route path="/movie/:id" element={<MovieDetails />} />
           </Routes>
         </BrowserRouter>
       </MovieProvider>
