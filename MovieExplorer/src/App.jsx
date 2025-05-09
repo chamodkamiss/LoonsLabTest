@@ -1,7 +1,9 @@
 import React, { useState,useEffect } from 'react'
-import { BrowserRouter, Router } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Home from './pages/Home'
+import { MovieProvider } from './context/MovieContext'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -30,9 +32,15 @@ function App() {
   }
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      </BrowserRouter>
+      <MovieProvider>
+        <BrowserRouter>
+          <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+          <Routes>
+            <Route path="/" element={<Home/>} />
+            
+          </Routes>
+        </BrowserRouter>
+      </MovieProvider>
     </ThemeProvider>
   )
 }

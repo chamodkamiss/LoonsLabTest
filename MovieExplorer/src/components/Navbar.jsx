@@ -62,7 +62,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" component={Link} to="/" sx={{ mr: 2 }}>
+        <IconButton edge="start" color="inherit" aria-label="menu" component={Link} to="/" sx={{ mr: { xs: 1, sm: 2 } }}>
           <MovieIcon />
         </IconButton>
 
@@ -81,7 +81,12 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           Movie Explorer
         </Typography>
 
-        <Box component="form" onSubmit={handleSearch}>
+        <Box component="form" onSubmit={handleSearch} sx={{ 
+            order: { xs: 2, sm: 0 },
+            width: { xs: "100%", sm: "auto" },
+            mt: { xs: 1, sm: 0 },
+            flexGrow: { xs: 1, sm: 0 }
+          }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -91,20 +96,43 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
               inputProps={{ "aria-label": "search" }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{
+                width: { xs: "100%", sm: "auto" }
+              }}
             />
           </Search>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", ml: { xs: 0, sm: 2 } }}>
           <IconButton color="inherit" onClick={toggleDarkMode} aria-label={darkMode ? "light mode" : "dark mode"}>
             {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
-          <Button color="inherit" component={Link} to="/favorites" startIcon={<FavoriteIcon />}>
+          <Button 
+            color="inherit" 
+            component={Link} 
+            to="/favorites"
+            startIcon={<FavoriteIcon />}
+            sx={{ display: { xs: "none", sm: "flex" } }}
+          >
             Favorites
           </Button>
 
-          <Button color="inherit" component={Link} to="/login">
+          <IconButton
+            color="inherit"
+            component={Link}
+            to="/favorites"
+            sx={{ display: { xs: "flex", sm: "none" } }}
+          >
+            <FavoriteIcon />
+          </IconButton>
+
+          <Button 
+            color="inherit" 
+            component={Link} 
+            to="/login"
+            sx={{ display: { xs: "none", sm: "block" } }}
+          >
             Login
           </Button>
         </Box>
