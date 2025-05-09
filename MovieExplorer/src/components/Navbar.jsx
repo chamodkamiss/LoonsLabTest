@@ -1,27 +1,116 @@
-import React from 'react';
-import {AppBar, Box, Button, IconButton, Toolbar, Typography} from '@mui/material';
-import MovieIcon from '@mui/icons-material/Movie';
-import {Link} from 'react-router-dom';
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { AppBar, Toolbar, Typography, Button, IconButton, InputBase, Box } from "@mui/material"
+import { styled, alpha } from "@mui/material/styles"
+import SearchIcon from "@mui/icons-material/Search"
+import MovieIcon from "@mui/icons-material/Movie"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+import Brightness4Icon from "@mui/icons-material/Brightness4"
+import Brightness7Icon from "@mui/icons-material/Brightness7"
 
-const Navbar = () => {
-    return(
-        <AppBar position='static'>
-            <Toolbar>
-                <IconButton edge="start" color="inherit" aria-label="menu" component={Link} to="/" sx={{ mr: 2 }}>
-                    <MovieIcon/>
-                </IconButton>    
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}))
 
-                <Typography variant="h6" noWrap component={Link} to="/" sx={{
-                    flexGrow: 1,
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    display:{xs: 'none', sm: 'block'},
-                    }}>
-                    Movie Explorer
-                </Typography>    
-            </Toolbar>
-        </AppBar>
-    )
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}))
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
+    },
+  },
+}))
+
+const Navbar = ({ darkMode, toggleDarkMode }) => {
+  const [searchQuery, setSearchQuery] = useState("")
+  const navigate = useNavigate()
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchQuery("")
+    }
+  }
+
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu" component={Link} to="/" sx={{ mr: 2 }}>
+          <MovieIcon />
+        </IconButton>
+
+        <Typography
+          variant="h6"
+          noWrap
+          component={Link}
+          to="/"
+          sx={{
+            flexGrow: 1,
+            display: { xs: "none", sm: "block" },
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
+          Movie Explorer
+        </Typography>
+
+        <Box component="form" onSubmit={handleSearch}>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search movies…"
+              inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Search>
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton color="inherit" onClick={toggleDarkMode} aria-label={darkMode ? "light mode" : "dark mode"}>
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+
+          <Button color="inherit" component={Link} to="/favorites" startIcon={<FavoriteIcon />}>
+            Favorites
+          </Button>
+
+          <Button color="inherit" component={Link} to="/login">
+            Login
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  )
 }
 
-export default Navbar;
+export default Navbar
