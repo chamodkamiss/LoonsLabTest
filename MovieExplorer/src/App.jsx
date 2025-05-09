@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Home from './pages/Home'
 import { MovieProvider } from './context/MovieContext'
+import Favorites from './pages/Favorites'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -37,6 +38,7 @@ function App() {
           <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           <Routes>
             <Route path="/" element={<Home/>} />
+            <Route path="/favorites" element={<Favorites />} />
             
           </Routes>
         </BrowserRouter>
