@@ -2,20 +2,11 @@ import { Box, Grid, Typography, CircularProgress } from "@mui/material"
 import FixedSizeMovieCard from "./MovieCard"
 
 const UniformMovieGrid = ({ movies, loading, error, title }) => {
-  // Height for empty states (loading, error, no results)
   const emptyStateHeight = "400px"
   
   if (loading && movies.length === 0) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: emptyStateHeight,
-          width: "100%",
-        }}
-      >
+      <Box sx={{ height: emptyStateHeight, display: "flex", justifyContent: "center", alignItems: "center" }}>
         <CircularProgress />
       </Box>
     )
@@ -23,34 +14,8 @@ const UniformMovieGrid = ({ movies, loading, error, title }) => {
 
   if (error) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: emptyStateHeight,
-          width: "100%",
-        }}
-      >
-        <Typography color="error" variant="h6">
-          {error}
-        </Typography>
-      </Box>
-    )
-  }
-
-  if (movies.length === 0) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: emptyStateHeight,
-          width: "100%",
-        }}
-      >
-        <Typography variant="h6">No movies found.</Typography>
+      <Box sx={{ height: emptyStateHeight, display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Typography color="error" variant="h6">{error}</Typography>
       </Box>
     )
   }
@@ -63,35 +28,39 @@ const UniformMovieGrid = ({ movies, loading, error, title }) => {
         </Typography>
       )}
 
-      <Grid container spacing={3}>
+      <Grid 
+        container 
+        spacing={2}
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'repeat(2, 1fr)',    // 2 columns on mobile
+            sm: 'repeat(3, 1fr)',    // 3 columns on tablet
+            md: 'repeat(4, 1fr)',    // 4 columns on desktop
+            lg: 'repeat(5, 1fr)',    // 5 columns on large screens
+          },
+          gap: 2,
+          alignItems: 'stretch'
+        }}
+      >
         {movies.map((movie) => (
-          <Grid
-            item
+          <Box
             key={movie.id}
-            xs={6}
-            sm={4}
-            md={3}
-            lg={3}
             sx={{
-              // Fixed height for all grid items to ensure uniformity
-              height: { 
-                xs: "300px",   // Smaller height on mobile
-                sm: "400px",   // Larger height on tablet/desktop
-                md: "450px" 
-            },
+              aspectRatio: '2/3',
+              position: 'relative',
+              borderRadius: 2,
+              overflow: 'hidden',
+              boxShadow: 3,
+              transition: 'transform 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                zIndex: 1
+              }
             }}
           >
-            <Box
-              sx={{
-                height: "100%",
-                width: "100%",
-                // This ensures all cards take exactly the same space
-                display: "flex",
-              }}
-            >
-              <FixedSizeMovieCard movie={movie} />
-            </Box>
-          </Grid>
+            <FixedSizeMovieCard movie={movie} />
+          </Box>
         ))}
       </Grid>
 
