@@ -9,6 +9,7 @@ import Brightness4Icon from "@mui/icons-material/Brightness4"
 import Brightness7Icon from "@mui/icons-material/Brightness7"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout'
+import HomeIcon from '@mui/icons-material/Home'
 import { MovieContext } from "../context/MovieContext"
 
 const Search = styled("div")(({ theme }) => ({
@@ -21,6 +22,7 @@ const Search = styled("div")(({ theme }) => ({
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
+  maxWidth: "800px", // Increased max-width
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
     width: "auto",
@@ -39,13 +41,14 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
+  width: "100%", // Make input take full width
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
+      width: "60ch", // Increased width for larger screens
     },
   },
 }))
@@ -80,32 +83,61 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" component={Link} to="/" sx={{ mr: { xs: 1, sm: 2 } }}>
-          <MovieIcon />
-        </IconButton>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Left section */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <IconButton 
+            edge="start" 
+            color="inherit" 
+            aria-label="menu" 
+            component={Link} 
+            to="/" 
+            sx={{ mr: 1 }}
+          >
+            <MovieIcon />
+          </IconButton>
 
-        <Typography
-          variant="h6"
-          noWrap
-          component={Link}
-          to="/"
-          sx={{
+          <Typography 
+            variant="h6" 
+            noWrap 
+            sx={{ 
+              display: { xs: 'none', sm: 'block' },
+              fontWeight: 600
+            }}
+          >
+            Movie Explorer
+          </Typography>
+
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            startIcon={<HomeIcon />}
+            sx={{
+              textTransform: 'none',
+              ml: 1,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)'
+              }
+            }}
+          >
+            Home
+          </Button>
+        </Box>
+
+        {/* Center section - Search */}
+        <Box 
+          component="form" 
+          onSubmit={handleSearch}
+          sx={{ 
             flexGrow: 1,
-            display: { xs: "none", sm: "block" },
-            textDecoration: "none",
-            color: "inherit",
+            display: 'flex',
+            justifyContent: 'center',
+            maxWidth: 800, // Increased max-width
+            width: "100%", // Take full available width
+            mx: 'auto'
           }}
         >
-          Movie Explorer
-        </Typography>
-
-        <Box component="form" onSubmit={handleSearch} sx={{ 
-            order: { xs: 2, sm: 0 },
-            width: { xs: "100%", sm: "auto" },
-            mt: { xs: 1, sm: 0 },
-            flexGrow: { xs: 1, sm: 0 }
-          }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -116,17 +148,14 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               sx={{
-                width: { xs: "100%", sm: "auto" }
+                width: "100%", // Take full width of parent
               }}
             />
           </Search>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", ml: { xs: 0, sm: 2 } }}>
-          <IconButton color="inherit" onClick={toggleDarkMode} aria-label={darkMode ? "light mode" : "dark mode"}>
-            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
-
+        {/* Right section - Actions */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Button 
             color="inherit" 
             component={Link} 
@@ -136,7 +165,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
           >
             Favorites
           </Button>
-
+          
           <IconButton
             color="inherit"
             component={Link}
@@ -144,6 +173,14 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             sx={{ display: { xs: "flex", sm: "none" } }}
           >
             <FavoriteIcon />
+          </IconButton>
+
+          <IconButton 
+            color="inherit" 
+            onClick={toggleDarkMode} 
+            aria-label={darkMode ? "light mode" : "dark mode"}
+          >
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
           {isAuthenticated ? (

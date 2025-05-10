@@ -214,7 +214,7 @@ const Footer = () => {
             {[
               { icon: <GitHubIcon />, label: 'GitHub', url: 'https://github.com/chamodkamiss' },
               { icon: <LinkedInIcon />, label: 'LinkedIn', url: 'https://www.linkedin.com/in/chamodkamiss/' },
-              { icon: <TwitterIcon />, label: 'Twitter', url: '#' }
+              { icon: <TwitterIcon />, label: 'Twitter', url: 'https://x.com/ChamodKamiss' }
             ].map((social) => (
               <IconButton
                 key={social.label}
