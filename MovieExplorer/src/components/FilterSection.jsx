@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react"
-import {Box, FormControl, InputLabel, Select, MenuItem, Slider, Typography, Button, Grid, Paper, IconButton, Collapse, Tooltip} from "@mui/material"
+import {
+  Box, FormControl, InputLabel, Select, MenuItem, Slider, 
+  Typography, Button, Grid, Paper, IconButton, Collapse, 
+  Tooltip, Chip, Divider
+} from "@mui/material"
 import { getGenres } from "../api/tmdbApi"
 import FilterListIcon from '@mui/icons-material/FilterList'
 import MovieFilterIcon from '@mui/icons-material/MovieFilter'
@@ -7,6 +11,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange'
 import StarIcon from '@mui/icons-material/Star'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import SearchIcon from '@mui/icons-material/Search'
+import TuneIcon from '@mui/icons-material/Tune'
 
 const currentYear = new Date().getFullYear()
 const years = Array.from({ length: 50 }, (_, i) => currentYear - i)
@@ -53,7 +58,7 @@ const FilterSection = ({ onApplyFilters }) => {
     <Paper 
       elevation={3}
       sx={{ 
-        p: 2,
+        p: 3, // Increased padding
         mb: 3,
         borderRadius: 2,
         background: (theme) => `linear-gradient(145deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
@@ -67,17 +72,29 @@ const FilterSection = ({ onApplyFilters }) => {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'space-between',
-        mb: 2 
+        mb: 3 // Increased margin
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FilterListIcon color="primary" />
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Filter Movies
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <TuneIcon color="primary" sx={{ fontSize: 28 }} />
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Discover Movies
           </Typography>
         </Box>
         <IconButton 
           onClick={() => setIsExpanded(!isExpanded)}
-          size="small"
+          size="medium"
+          sx={{ 
+            backgroundColor: (theme) => 
+              theme.palette.mode === 'dark' 
+                ? 'rgba(255, 255, 255, 0.05)' 
+                : 'rgba(0, 0, 0, 0.04)',
+            '&:hover': {
+              backgroundColor: (theme) => 
+                theme.palette.mode === 'dark' 
+                  ? 'rgba(255, 255, 255, 0.1)' 
+                  : 'rgba(0, 0, 0, 0.08)',
+            }
+          }}
         >
           <FilterListIcon 
             sx={{ 
@@ -88,9 +105,37 @@ const FilterSection = ({ onApplyFilters }) => {
         </IconButton>
       </Box>
 
+      {/* Add active filters display */}
+      <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        {selectedGenre && (
+          <Chip 
+            label={`Genre: ${genres.find(g => g.id === selectedGenre)?.name}`}
+            onDelete={() => setSelectedGenre("")}
+            color="primary"
+            variant="outlined"
+          />
+        )}
+        {selectedYear && (
+          <Chip 
+            label={`Year: ${selectedYear}`}
+            onDelete={() => setSelectedYear("")}
+            color="primary"
+            variant="outlined"
+          />
+        )}
+        {(rating[0] > 0 || rating[1] < 10) && (
+          <Chip 
+            label={`Rating: ${rating[0]} - ${rating[1]}`}
+            onDelete={() => setRating([0, 10])}
+            color="primary"
+            variant="outlined"
+          />
+        )}
+      </Box>
+
       <Collapse in={isExpanded}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <FormControl 
               fullWidth 
               disabled={loading}
@@ -98,6 +143,9 @@ const FilterSection = ({ onApplyFilters }) => {
                 '& .MuiOutlinedInput-root': {
                   '&:hover fieldset': {
                     borderColor: 'primary.main',
+                  },
+                  '& fieldset': {
+                    borderWidth: '2px',
                   }
                 }
               }}
@@ -131,13 +179,16 @@ const FilterSection = ({ onApplyFilters }) => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <FormControl 
               fullWidth
               sx={{ 
                 '& .MuiOutlinedInput-root': {
                   '&:hover fieldset': {
                     borderColor: 'primary.main',
+                  },
+                  '& fieldset': {
+                    borderWidth: '2px',
                   }
                 }
               }}
@@ -171,21 +222,32 @@ const FilterSection = ({ onApplyFilters }) => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <Box sx={{ 
-              px: 2,
-              py: 1,
-              border: '1px solid',
+              px: 3,
+              py: 2,
+              border: '2px solid',
               borderColor: 'divider',
               borderRadius: 1,
               '&:hover': {
                 borderColor: 'primary.main',
               }
             }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <StarIcon fontSize="small" color="primary" />
-                <Typography>
-                  Rating: {rating[0]} - {rating[1]}
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1, 
+                mb: 2,
+                justifyContent: 'space-between'
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <StarIcon fontSize="small" color="primary" />
+                  <Typography variant="subtitle1" fontWeight={500}>
+                    Rating Range
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  {rating[0]} - {rating[1]}
                 </Typography>
               </Box>
               <Slider
@@ -202,9 +264,17 @@ const FilterSection = ({ onApplyFilters }) => {
                 ]}
                 sx={{
                   '& .MuiSlider-thumb': {
+                    width: 16,
+                    height: 16,
                     '&:hover, &.Mui-focusVisible': {
                       boxShadow: '0 0 0 8px rgba(25, 118, 210, 0.16)',
                     }
+                  },
+                  '& .MuiSlider-track': {
+                    height: 6
+                  },
+                  '& .MuiSlider-rail': {
+                    height: 6
                   }
                 }}
               />
@@ -212,33 +282,50 @@ const FilterSection = ({ onApplyFilters }) => {
           </Grid>
         </Grid>
 
+        <Divider sx={{ my: 3 }} />
+
         <Box sx={{ 
-          mt: 3,
-          pt: 2,
           display: "flex",
-          justifyContent: "flex-end",
-          gap: 2,
-          borderTop: '1px solid',
-          borderColor: 'divider'
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 2
         }}>
-          <Tooltip title="Reset Filters">
-            <Button 
-              variant="outlined" 
-              onClick={handleResetFilters}
-              startIcon={<RefreshIcon />}
-            >
-              Reset
-            </Button>
-          </Tooltip>
-          <Tooltip title="Apply Filters">
-            <Button 
-              variant="contained" 
-              onClick={handleApplyFilters}
-              startIcon={<SearchIcon />}
-            >
-              Apply Filters
-            </Button>
-          </Tooltip>
+          <Typography variant="body2" color="text.secondary">
+            {selectedGenre || selectedYear || rating[0] > 0 || rating[1] < 10 
+              ? "Customize your movie preferences using the filters above"
+              : "No filters applied - showing trending movies"}
+          </Typography>
+          
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Tooltip title="Reset All Filters">
+              <Button 
+                variant="outlined" 
+                onClick={handleResetFilters}
+                startIcon={<RefreshIcon />}
+                sx={{ 
+                  borderWidth: '2px',
+                  '&:hover': {
+                    borderWidth: '2px'
+                  }
+                }}
+              >
+                Reset
+              </Button>
+            </Tooltip>
+            <Tooltip title="Apply Filters">
+              <Button 
+                variant="contained" 
+                onClick={handleApplyFilters}
+                startIcon={<SearchIcon />}
+                sx={{ 
+                  fontWeight: 600,
+                  px: 3
+                }}
+              >
+                Apply Filters
+              </Button>
+            </Tooltip>
+          </Box>
         </Box>
       </Collapse>
     </Paper>
