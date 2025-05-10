@@ -32,7 +32,7 @@ const movieReducer = (state, action) => {
     case "SET_MOVIES":
       return {
         ...state,
-        movies: action.payload,
+        movies: action.payload.resetMovies ? action.payload.movies : [...state.movies, ...action.payload.movies],
         loading: false,
       }
     case "SET_TRENDING":

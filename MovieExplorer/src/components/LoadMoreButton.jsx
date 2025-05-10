@@ -6,18 +6,35 @@ const LoadMoreButton = ({ loading, onClick, hasMore }) => {
   }
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+    <Box sx={{ 
+      display: "flex", 
+      justifyContent: "center", 
+      my: 4,
+      minHeight: '48px' // Prevent layout shift
+    }}>
       <Button 
         variant="contained" 
         onClick={onClick} 
         disabled={loading} 
         sx={{ 
           minWidth: "200px",
-          height: "36px" // Fixed height prevents vertical shaking
+          height: "48px",
+          position: "relative",
+          '&.Mui-disabled': {
+            backgroundColor: 'action.disabledBackground',
+          }
         }}
       >
         {loading ? (
-          <CircularProgress size={24} sx={{ color: "inherit" }} />
+          <CircularProgress 
+            size={24} 
+            sx={{ 
+              color: "inherit",
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-12px"
+            }} 
+          />
         ) : (
           "Load More"
         )}

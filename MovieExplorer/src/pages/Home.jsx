@@ -39,7 +39,6 @@ const UniformHome = () => {
   const fetchMovies = useCallback(
     async (searchQuery, pageNum = 1, resetMovies = true) => {
       try {
-        // Use the appropriate loading state based on whether we're loading more or initial
         if (resetMovies) {
           dispatch({ type: "SET_LOADING", payload: true });
         } else {
@@ -60,19 +59,18 @@ const UniformHome = () => {
 
         setTotalPages(result.total_pages);
 
-        if (resetMovies) {
-          dispatch({ type: "SET_MOVIES", payload: result.results });
-        } else {
-          dispatch({
-            type: "SET_MOVIES",
-            payload: [...movies, ...result.results],
-          });
-        }
+        dispatch({
+          type: "SET_MOVIES",
+          payload: {
+            movies: result.results,
+            resetMovies: resetMovies
+          }
+        });
+
       } catch (error) {
         console.error("Error fetching movies:", error);
         dispatch({ type: "SET_ERROR", payload: error.toString() });
       } finally {
-        // Clear the appropriate loading state
         if (resetMovies) {
           dispatch({ type: "SET_LOADING", payload: false });
         } else {
@@ -80,7 +78,7 @@ const UniformHome = () => {
         }
       }
     },
-    [dispatch, movies, filters]
+    [dispatch, filters]
   );
 
   const fetchTrending = useCallback(async () => {
@@ -106,11 +104,13 @@ const UniformHome = () => {
     }
   }, [searchParam, filters, fetchMovies, fetchTrending]);
 
-  const handleLoadMore = () => {
-    const nextPage = page + 1;
-    setPage(nextPage);
-    fetchMovies(searchParam, nextPage, false);
-  };
+  const handleLoadMore = useCallback(() => {
+    if (page < totalPages) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchMovies(searchParam, nextPage, false);
+    }
+  }, [page, totalPages, searchParam, fetchMovies]);
 
   const handleApplyFilters = (newFilters) => {
     setFilters(newFilters);
