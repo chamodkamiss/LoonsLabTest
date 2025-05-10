@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom"
 import { Container, Grid, Typography, Box, Chip, Button, Paper, CircularProgress, Divider } from "@mui/material"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
+import StarIcon from "@mui/icons-material/Star"
+import AccessTimeIcon from "@mui/icons-material/AccessTime"
 import { MovieContext } from "../context/MovieContext"
 import { getMovieDetails } from "../api/tmdbApi"
 import YouTubeTrailer from "../components/YouTubeTrailer"
@@ -91,49 +93,126 @@ const MovieDetails = () => {
               <Box
                 component="img"
                 src={
-                  movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "/placeholder-poster.jpg"
+                  movie.poster_path 
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+                    : "/placeholder-poster.jpg"
                 }
                 alt={movie.title}
                 sx={{
-                    width: "100%",
-                    height: "auto",
-                    maxHeight: "400px", // Increased height
-                    objectFit: "contain",
-                    borderRadius: 1,
-                    boxShadow: 3,
-                    transform: "translateY(-0)", // Move poster down
-                    position: "relative",
-                    zIndex: 1,
-                    margin: "0 auto",
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: "350px",
+                  objectFit: "cover",
+                  borderRadius: 2,
+                  boxShadow: (theme) => `0 8px 24px ${
+                    theme.palette.mode === 'dark' 
+                      ? 'rgba(0,0,0,0.5)' 
+                      : 'rgba(0,0,0,0.2)'
+                  }`,
+                  position: "relative",
+                  zIndex: 1,
+                  display: "block",
+                  margin: "0 auto",
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                  },
+                  "@media (max-width: 600px)": {
+                    maxWidth: "280px",
+                    marginBottom: 2
+                  }
                 }}
               />
             </Grid>
             <Grid item xs={12} sm={8} md={9}>
-              <Typography variant="h3" component="h1" color="white" gutterBottom>
+              <Typography 
+                variant="h3" 
+                component="h1" 
+                color="white" 
+                gutterBottom
+                sx={{
+                  fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' },
+                  wordBreak: 'break-word',
+                  lineHeight: 1.2
+                }}
+              >
                 {movie.title} {movie.release_date && `(${new Date(movie.release_date).getFullYear()})`}
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+
+              <Box sx={{ 
+                display: "flex", 
+                flexWrap: "wrap", 
+                gap: { xs: 0.5, sm: 1 }, 
+                mb: { xs: 1.5, sm: 2 } 
+              }}>
                 {movie.genres.map((genre) => (
                   <Chip
                     key={genre.id}
                     label={genre.name}
                     size="small"
-                    sx={{ bgcolor: "rgba(255,255,255,0.2)", color: "white" }}
+                    sx={{ 
+                      bgcolor: "rgba(255,255,255,0.2)", 
+                      color: "white",
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      height: { xs: '24px', sm: '32px' }
+                    }}
                   />
                 ))}
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography variant="h6" color="white" sx={{ mr: 2 }}>
-                  {movie.vote_average.toFixed(1)}/10
-                </Typography>
-                <Typography variant="body2" color="white" sx={{ mr: 2 }}>
-                  {movie.runtime} min
-                </Typography>
+
+              <Box sx={{ 
+                display: "flex", 
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                gap: { xs: 1.5, sm: 2 },
+                mb: { xs: 1.5, sm: 2 }
+              }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 2,
+                  flexWrap: 'wrap'
+                }}>
+                  <Typography 
+                    variant="h6" 
+                    color="white" 
+                    sx={{ 
+                      fontSize: { xs: '1rem', sm: '1.25rem' },
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5
+                    }}
+                  >
+                    <StarIcon sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} />
+                    {movie.vote_average.toFixed(1)}/10
+                  </Typography>
+
+                  <Typography 
+                    variant="body2" 
+                    color="white" 
+                    sx={{ 
+                      fontSize: { xs: '0.875rem', sm: '1rem' },
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5
+                    }}
+                  >
+                    <AccessTimeIcon sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }} />
+                    {movie.runtime} min
+                  </Typography>
+                </Box>
+
                 <Button
                   variant="contained"
                   color={isFavorite ? "secondary" : "primary"}
                   startIcon={isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                   onClick={handleToggleFavorite}
+                  sx={{
+                    width: { xs: '100%', sm: 'auto' },
+                    py: { xs: 1, sm: 1.5 },
+                    px: { xs: 2, sm: 3 },
+                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                  }}
                 >
                   {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
                 </Button>
