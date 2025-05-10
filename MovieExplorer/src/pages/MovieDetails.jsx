@@ -152,10 +152,34 @@ const MovieDetails = () => {
 
           <Divider sx={{ my: 3 }} />
 
+          {/* Trailer Section - Moved up and made larger */}
+          {trailer?.key ? (
+            <Box sx={{ mb: 4, mt: 2 }}>
+                <YouTubeTrailer
+                videoKey={trailer.key}
+                title={movie.title}
+                showTitle={true}
+                />
+            </Box>
+            ) : (
+            <Box 
+                sx={{ 
+                mb: 4,
+                p: 3,
+                bgcolor: 'background.paper',
+                borderRadius: 2,
+                textAlign: 'center'
+                }}
+            >
+                <Typography variant="body1" color="text.secondary">
+                No trailer available
+                </Typography>
+            </Box>
+            )}
+
+            <Divider sx={{ my: 3 }} />
+
           <Grid container spacing={4}>
-            <Grid item xs={12} md={8}>
-              <YouTubeTrailer videoKey={trailer?.key} title={movie.title} />
-            </Grid>
             <Grid item xs={12} md={4}>
               <Typography variant="h6" gutterBottom>
                 Details
