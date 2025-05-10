@@ -24,85 +24,100 @@ function App() {
     palette: {
       mode: darkMode ? "dark" : "light",
       primary: {
-        main: '#1976d2',
-        light: '#42a5f5',
-        dark: '#1565c0',
+        main: '#2196f3', // Modern blue
+        light: '#64b5f6',
+        dark: '#1976d2',
       },
       secondary: {
-        main: '#f50057',
+        main: '#f50057', // Modern pink
         light: '#ff4081',
         dark: '#c51162',
       },
       background: {
-        default: darkMode ? '#121212' : '#f5f5f5',
-        paper: darkMode ? '#1e1e1e' : '#ffffff',
-        alternate: darkMode ? '#242424' : '#f0f0f0',
+        default: darkMode ? '#0a1929' : '#f8fafc', // Deeper dark, lighter light
+        paper: darkMode ? '#1a2027' : '#ffffff',
+        alternate: darkMode ? '#132f4c' : '#f1f5f9',
       },
       text: {
-        primary: darkMode ? '#ffffff' : '#000000',
-        secondary: darkMode ? '#b3b3b3' : '#666666',
+        primary: darkMode ? '#ffffff' : '#0f172a',
+        secondary: darkMode ? '#94a3b8' : '#475569',
       },
+    },
+    typography: {
+      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+      h1: {
+        fontWeight: 700,
+        letterSpacing: '-0.025em',
+      },
+      h2: {
+        fontWeight: 700,
+        letterSpacing: '-0.025em',
+      },
+      h3: {
+        fontWeight: 600,
+        letterSpacing: '-0.025em',
+      },
+      h4: {
+        fontWeight: 600,
+        letterSpacing: '-0.025em',
+      },
+      button: {
+        textTransform: 'none',
+        fontWeight: 500,
+      },
+    },
+    shape: {
+      borderRadius: 12,
     },
     components: {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
             transition: 'background-color 0.3s ease',
-          },
-        },
-      },
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
-          },
-        },
-      },
-      MuiCard: {
-        styleOverrides: {
-          root: {
-            backgroundColor: darkMode ? '#1e1e1e' : '#ffffff',
-          },
-        },
-      },
-      MuiAppBar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: darkMode ? '#1a1a1a' : '#1976d2',
+            scrollBehavior: 'smooth',
           },
         },
       },
       MuiButton: {
         styleOverrides: {
           root: {
-            textTransform: 'none',
+            borderRadius: 8,
+            padding: '8px 16px',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+            },
+          },
+          contained: {
+            boxShadow: 'none',
+            '&:hover': {
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            },
           },
         },
       },
-      MuiDivider: {
+      MuiCard: {
         styleOverrides: {
           root: {
-            borderColor: darkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)',
+            borderRadius: 12,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 12px 24px rgba(0,0,0,0.15)',
+            },
           },
         },
       },
-    },
-    shape: {
-      borderRadius: 8,
-    },
-    shadows: [
-      'none',
-      darkMode 
-        ? '0 2px 4px 0 rgba(0,0,0,0.4)'
-        : '0 2px 4px 0 rgba(0,0,0,0.1)',
-      // ... add more shadow definitions if needed
-    ],
-    transitions: {
-      duration: {
-        shortest: 150,
-        shorter: 200,
-        short: 250,
-        standard: 300,
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12,
+            transition: 'all 0.3s ease',
+          },
+          elevation1: {
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          },
+        },
       },
     },
   })

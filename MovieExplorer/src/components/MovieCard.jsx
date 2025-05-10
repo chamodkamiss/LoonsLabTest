@@ -20,12 +20,21 @@ const FixedSizeMovieCard = ({ movie }) => {
           flexDirection: 'column',
           bgcolor: 'background.paper',
           transition: 'all 0.3s ease',
-          '&:hover .movie-info': {
-            opacity: 1
+          overflow: 'hidden',
+          '&:hover': {
+            transform: 'translateY(-8px)',
+            '& .movie-info': {
+              opacity: 1,
+              transform: 'translateY(0)',
+            },
+            '& .movie-backdrop': {
+              transform: 'scale(1.05)',
+            }
           }
         }}
       >
         <Box
+          className="movie-backdrop"
           sx={{
             position: 'absolute',
             top: 0,
@@ -38,7 +47,8 @@ const FixedSizeMovieCard = ({ movie }) => {
                 : "/placeholder-poster.jpg"
             })`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundPosition: 'center',
+            transition: 'transform 0.3s ease',
           }}
         />
   
@@ -51,14 +61,15 @@ const FixedSizeMovieCard = ({ movie }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            bgcolor: 'rgba(0, 0, 0, 0.7)',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.3) 100%)',
             color: 'white',
             p: 2,
             opacity: 0,
-            transition: 'opacity 0.3s ease',
+            transform: 'translateY(20px)',
+            transition: 'all 0.3s ease',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between'
+            justifyContent: 'flex-end',
           }}
         >
           <Box>

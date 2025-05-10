@@ -74,11 +74,11 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
     width: "100%",
     fontSize: {
       xs: '0.875rem',
-      sm: '1rem'
+      sm: '1.1rem'
     },
     height: {
-      xs: '2.5rem',
-      sm: '3rem'
+      xs: '3rem',
+      sm: '3.5rem'
     },
     [theme.breakpoints.up("md")]: {
       width: "60ch",
@@ -234,7 +234,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             display: 'flex', 
             justifyContent: 'space-between', 
             px: { xs: 0.5, sm: 2 },
-            minHeight: { xs: '56px', sm: '64px' }, // Explicit height definition
+            minHeight: { xs: '64px', sm: '72px' }, // Explicit height definition
             gap: { xs: 0.5, sm: 1 } // Add gap between elements
           }}>
           {/* Left section - Menu icon on mobile */}
