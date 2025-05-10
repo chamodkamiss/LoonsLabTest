@@ -1,10 +1,21 @@
 import { createContext, useReducer, useEffect } from "react"
 
-// Initial state
+// Get initial favorites from localStorage
+const getFavoritesFromStorage = () => {
+  try {
+    const storedFavorites = localStorage.getItem('favorites')
+    return storedFavorites ? JSON.parse(storedFavorites) : []
+  } catch (error) {
+    console.error('Error loading favorites:', error)
+    return []
+  }
+}
+
+// Initial state with stored favorites
 const initialState = {
   movies: [],
   trending: [],
-  favorites: [],
+  favorites: getFavoritesFromStorage(), // Initialize from localStorage
   lastSearched: null,
   loading: false,
   error: null,
@@ -33,20 +44,27 @@ const movieReducer = (state, action) => {
         ...state,
         lastSearched: action.payload,
       }
-    case "ADD_FAVORITE":
-      // Prevent duplicates
+    case "ADD_FAVORITE": {
       if (state.favorites.some((movie) => movie.id === action.payload.id)) {
         return state
       }
+      const newFavorites = [...state.favorites, action.payload]
+      localStorage.setItem('favorites', JSON.stringify(newFavorites)) // Save to localStorage
       return {
         ...state,
-        favorites: [...state.favorites, action.payload],
+        favorites: newFavorites,
       }
-    case "REMOVE_FAVORITE":
+    }
+    case "REMOVE_FAVORITE": {
+      const updatedFavorites = state.favorites.filter(
+        (movie) => movie.id !== action.payload
+      )
+      localStorage.setItem('favorites', JSON.stringify(updatedFavorites)) // Save to localStorage
       return {
         ...state,
-        favorites: state.favorites.filter((movie) => movie.id !== action.payload),
+        favorites: updatedFavorites,
       }
+    }
     case "SET_LOADING":
       return {
         ...state,
@@ -69,15 +87,7 @@ export const MovieProvider = ({ children }) => {
 
   // Load favorites and last searched movie from localStorage on initial render
   useEffect(() => {
-    const favorites = localStorage.getItem("favorites")
     const lastSearched = localStorage.getItem("lastSearched")
-
-    if (favorites) {
-      dispatch({
-        type: "SET_FAVORITES",
-        payload: JSON.parse(favorites),
-      })
-    }
 
     if (lastSearched) {
       dispatch({
@@ -87,9 +97,13 @@ export const MovieProvider = ({ children }) => {
     }
   }, [])
 
-  // Save favorites and last searched movie to localStorage whenever they change
+  // Optional: Sync favorites with localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(state.favorites))
+    try {
+      localStorage.setItem('favorites', JSON.stringify(state.favorites))
+    } catch (error) {
+      console.error('Error saving favorites:', error)
+    }
   }, [state.favorites])
 
   useEffect(() => {
