@@ -95,14 +95,6 @@ npm run dev
 VITE_TMDB_API_KEY=your_api_key_here
 ```
 
-### API Integration
-The application uses the TMDB API for movie data. Required endpoints:
-- `/trending/movie/week`
-- `/search/movie`
-- `/movie/{id}`
-- `/discover/movie`
-- `/genre/movie/list`
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -117,8 +109,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👤 Author
 
 Your Name
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
+- GitHub: [@yourusername](https://github.com/chamodkamiss)
+- LinkedIn: [Your Name](https://linkedin.com/in/chamodkamiss)
 
 ## 🤝 Contributing
 
