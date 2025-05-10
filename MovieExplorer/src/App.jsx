@@ -7,6 +7,8 @@ import { MovieProvider } from './context/MovieContext'
 import Favorites from './pages/Favorites'
 import MovieDetails from './pages/MovieDetails'
 import Login from './pages/Login'
+import Footer from './components/Footer'
+import { Box } from '@mui/material'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -114,13 +116,22 @@ function App() {
       <CssBaseline /> {/* Add this for consistent baseline styles */}
       <MovieProvider>
         <BrowserRouter>
-          <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/movie/:id" element={<MovieDetails />} />
-            <Route path='/login' element={<Login />} />
-          </Routes>
+          <Box sx={{ 
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh' // Ensures footer sticks to bottom
+          }}>
+            <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            <Box sx={{ flex: 1 }}> {/* Flex: 1 pushes footer to bottom */}
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/movie/:id" element={<MovieDetails />} />
+                <Route path='/login' element={<Login />} />
+              </Routes>
+            </Box>
+            <Footer />
+          </Box>
         </BrowserRouter>
       </MovieProvider>
     </ThemeProvider>

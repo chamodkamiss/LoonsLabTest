@@ -1,12 +1,15 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { AppBar, Toolbar, Typography, Button, IconButton, InputBase, Box } from "@mui/material"
+import { AppBar, Toolbar, Typography, Button, IconButton, InputBase, Box, Avatar, Menu, MenuItem, Divider } from "@mui/material"
 import { styled, alpha } from "@mui/material/styles"
 import SearchIcon from "@mui/icons-material/Search"
 import MovieIcon from "@mui/icons-material/Movie"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import Brightness4Icon from "@mui/icons-material/Brightness4"
 import Brightness7Icon from "@mui/icons-material/Brightness7"
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { MovieContext } from "../context/MovieContext"
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -48,7 +51,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 const Navbar = ({ darkMode, toggleDarkMode }) => {
+  const { user, isAuthenticated, dispatch } = useContext(MovieContext)
   const [searchQuery, setSearchQuery] = useState("")
+  const [anchorEl, setAnchorEl] = useState(null)
   const navigate = useNavigate()
 
   const handleSearch = (e) => {
@@ -57,6 +62,20 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
       navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`)
       setSearchQuery("")
     }
+  }
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT_USER" })
+    handleMenuClose()
+    navigate('/')
   }
 
   return (
@@ -127,14 +146,56 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
             <FavoriteIcon />
           </IconButton>
 
-          <Button 
-            color="inherit" 
-            component={Link} 
-            to="/login"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            Login
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <IconButton
+                onClick={handleMenuOpen}
+                sx={{ 
+                  ml: 2,
+                  padding: 0.5,
+                  border: '2px solid',
+                  borderColor: 'primary.light' 
+                }}
+              >
+                <Avatar
+                  src={user.avatar}
+                  alt={user.username}
+                  sx={{ width: 32, height: 32 }}
+                />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              >
+                <MenuItem sx={{ pointerEvents: 'none' }}>
+                  <Box sx={{ py: 1 }}>
+                    <Typography variant="subtitle1">{user.username}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {user.email}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleLogout}>
+                  <LogoutIcon sx={{ mr: 2 }} />
+                  Logout
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button 
+              color="inherit" 
+              component={Link} 
+              to="/login"
+              startIcon={<AccountCircleIcon />}
+              sx={{ display: { xs: "none", sm: "flex" } }}
+            >
+              Login
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
