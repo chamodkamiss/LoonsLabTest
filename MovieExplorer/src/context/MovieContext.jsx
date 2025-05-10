@@ -19,6 +19,8 @@ const initialState = {
   lastSearched: null,
   loading: false,
   error: null,
+  user: JSON.parse(localStorage.getItem('user')) || null,
+  isAuthenticated: !!localStorage.getItem('user'),
 }
 
 // Create context
@@ -75,6 +77,20 @@ const movieReducer = (state, action) => {
         ...state,
         error: action.payload,
         loading: false,
+      }
+    case "LOGIN_USER":
+      localStorage.setItem('user', JSON.stringify(action.payload))
+      return {
+        ...state,
+        user: action.payload,
+        isAuthenticated: true,
+      }
+    case "LOGOUT_USER":
+      localStorage.removeItem('user')
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
       }
     default:
       return state
