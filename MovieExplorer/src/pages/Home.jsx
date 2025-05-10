@@ -20,8 +20,8 @@ const UniformHome = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState({});
-  // Removed unused isFiltering state
   const [currentView, setCurrentView] = useState("trending"); // "trending", "search", "filter"
+  const [loadingMore, setLoadingMore] = useState(false); // Separate loading state for "Load More"
 
   // Reset page when search or filters change
   useEffect(() => {
@@ -39,7 +39,12 @@ const UniformHome = () => {
   const fetchMovies = useCallback(
     async (searchQuery, pageNum = 1, resetMovies = true) => {
       try {
-        dispatch({ type: "SET_LOADING", payload: true });
+        // Use the appropriate loading state based on whether we're loading more or initial
+        if (resetMovies) {
+          dispatch({ type: "SET_LOADING", payload: true });
+        } else {
+          setLoadingMore(true);
+        }
 
         let result;
         if (searchQuery) {
@@ -49,10 +54,8 @@ const UniformHome = () => {
           }
         } else if (Object.keys(filters).length > 0) {
           result = await getMoviesByFilter(filters, pageNum);
-          // Removed setIsFiltering as isFiltering is no longer used
         } else {
           result = await getTrendingMovies(pageNum);
-          // Removed setIsFiltering as isFiltering is no longer used
         }
 
         setTotalPages(result.total_pages);
@@ -69,7 +72,12 @@ const UniformHome = () => {
         console.error("Error fetching movies:", error);
         dispatch({ type: "SET_ERROR", payload: error.toString() });
       } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
+        // Clear the appropriate loading state
+        if (resetMovies) {
+          dispatch({ type: "SET_LOADING", payload: false });
+        } else {
+          setLoadingMore(false);
+        }
       }
     },
     [dispatch, movies, filters]
@@ -108,8 +116,11 @@ const UniformHome = () => {
     setFilters(newFilters);
   };
 
-  // We use a single grid component that changes content based on the current view
-  // This prevents layout shifts between different views
+  // Helper function to check if we should show the load more button
+  const shouldShowLoadMore = () => {
+    if (currentView === "trending") return false; // No load more for trending view
+    return totalPages > 1 && page < totalPages;
+  };
   
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -122,11 +133,6 @@ const UniformHome = () => {
               Search Results for "{searchParam}"
             </Typography>
             <UniformMovieGrid movies={movies} loading={loading} error={error} />
-            {totalPages > 1 && page < totalPages && (
-              <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-                <LoadMoreButton loading={loading} onClick={handleLoadMore} hasMore={page < totalPages} />
-              </Box>
-            )}
           </Box>
         )}
 
@@ -136,11 +142,6 @@ const UniformHome = () => {
               Filtered Movies
             </Typography>
             <UniformMovieGrid movies={movies} loading={loading} error={error} />
-            {totalPages > 1 && page < totalPages && (
-              <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-                <LoadMoreButton loading={loading} onClick={handleLoadMore} hasMore={page < totalPages} />
-              </Box>
-            )}
           </Box>
         )}
 
@@ -163,6 +164,15 @@ const UniformHome = () => {
               </Box>
             )}
           </Box>
+        )}
+        
+        {/* Single LoadMoreButton positioned consistently at the bottom */}
+        {shouldShowLoadMore() && (
+          <LoadMoreButton 
+            loading={loadingMore} 
+            onClick={handleLoadMore} 
+            hasMore={page < totalPages} 
+          />
         )}
       </Box>
     </Container>

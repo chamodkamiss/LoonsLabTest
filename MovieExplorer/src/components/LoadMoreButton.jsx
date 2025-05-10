@@ -7,8 +7,20 @@ const LoadMoreButton = ({ loading, onClick, hasMore }) => {
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-      <Button variant="contained" onClick={onClick} disabled={loading} sx={{ minWidth: "200px" }}>
-        {loading ? <CircularProgress size={24} /> : "Load More"}
+      <Button 
+        variant="contained" 
+        onClick={onClick} 
+        disabled={loading} 
+        sx={{ 
+          minWidth: "200px",
+          height: "36px" // Fixed height prevents vertical shaking
+        }}
+      >
+        {loading ? (
+          <CircularProgress size={24} sx={{ color: "inherit" }} />
+        ) : (
+          "Load More"
+        )}
       </Button>
     </Box>
   )

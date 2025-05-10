@@ -20,8 +20,9 @@ const UniformMovieGrid = ({ movies, loading, error, title }) => {
     )
   }
 
+  // Fixed-height container to prevent layout shifts
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", minHeight: movies.length ? undefined : emptyStateHeight }}>
       {title && (
         <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
           {title}
@@ -64,11 +65,7 @@ const UniformMovieGrid = ({ movies, loading, error, title }) => {
         ))}
       </Grid>
 
-      {loading && movies.length > 0 && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          <CircularProgress size={30} />
-        </Box>
-      )}
+      {/* Removed the inline loading indicator to prevent layout shifts */}
     </Box>
   )
 }
