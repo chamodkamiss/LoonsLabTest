@@ -123,7 +123,7 @@ Your Name
 ## 📝 Project Structure
 
 ```
-movie-explorer/
+LOONSLABTEST/
 ├── src/
 │   ├── api/           # API integration
 │   ├── components/    # Reusable components
